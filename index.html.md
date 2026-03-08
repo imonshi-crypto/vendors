@@ -1,0 +1,834 @@
+<!DOCTYPE html>  
+  
+<html lang="en">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<title>AirPods Vendor Hub</title>  
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">  
+<style>  
+  :root {  
+    --bg: #0a0a0f;  
+    --card: #16161f;  
+    --border: #1e1e2e;  
+    --accent: #00e5ff;  
+    --accent2: #7c3aed;  
+    --gold: #f0c040;  
+    --text: #e8e8f0;  
+    --muted: #6b6b88;  
+    --white: #ffffff;  
+  }  
+  
+- { margin: 0; padding: 0; box-sizing: border-box; }  
+  
+body {  
+background: var(–bg);  
+color: var(–text);  
+font-family: ‘Syne’, sans-serif;  
+min-height: 100vh;  
+overflow-x: hidden;  
+}  
+  
+body::before {  
+content: ‘’;  
+position: fixed;  
+inset: 0;  
+background-image:  
+linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),  
+linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);  
+background-size: 60px 60px;  
+pointer-events: none;  
+z-index: 0;  
+}  
+  
+body::after {  
+content: ‘’;  
+position: fixed;  
+top: -20%;  
+left: -10%;  
+width: 600px;  
+height: 600px;  
+background: radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%);  
+pointer-events: none;  
+z-index: 0;  
+}  
+  
+.glow-orb-right {  
+position: fixed;  
+bottom: -20%;  
+right: -10%;  
+width: 500px;  
+height: 500px;  
+background: radial-gradient(circle, rgba(0,229,255,0.08) 0%, transparent 70%);  
+pointer-events: none;  
+z-index: 0;  
+}  
+  
+/* ── Header ── */  
+header {  
+position: relative;  
+z-index: 10;  
+text-align: center;  
+padding: 70px 20px 40px;  
+}  
+  
+.badge {  
+display: inline-block;  
+background: rgba(0,229,255,0.1);  
+border: 1px solid rgba(0,229,255,0.3);  
+color: var(–accent);  
+font-family: ‘DM Mono’, monospace;  
+font-size: 11px;  
+letter-spacing: 3px;  
+padding: 6px 18px;  
+border-radius: 50px;  
+margin-bottom: 24px;  
+text-transform: uppercase;  
+}  
+  
+h1 {  
+font-size: clamp(42px, 8vw, 80px);  
+font-weight: 800;  
+line-height: 1;  
+letter-spacing: -2px;  
+background: linear-gradient(135deg, #ffffff 0%, #a0a0cc 60%, var(–accent) 100%);  
+-webkit-background-clip: text;  
+-webkit-text-fill-color: transparent;  
+background-clip: text;  
+margin-bottom: 16px;  
+}  
+  
+.subtitle {  
+font-family: ‘DM Mono’, monospace;  
+color: var(–muted);  
+font-size: 14px;  
+letter-spacing: 1px;  
+margin-bottom: 28px;  
+}  
+  
+/* ── Contact bar ── */  
+.contact-bar {  
+display: inline-flex;  
+align-items: center;  
+gap: 9px;  
+background: rgba(255,255,255,0.04);  
+border: 1px solid rgba(255,255,255,0.09);  
+border-radius: 50px;  
+padding: 10px 22px;  
+font-family: ‘DM Mono’, monospace;  
+font-size: 13px;  
+color: #8888aa;  
+}  
+  
+.contact-bar .tiktok-icon { font-size: 14px; opacity: 0.65; }  
+  
+.contact-bar a {  
+color: #5ba3f5;  
+text-decoration: none;  
+font-weight: 500;  
+display: inline-flex;  
+align-items: center;  
+gap: 3px;  
+transition: color 0.2s;  
+}  
+  
+.contact-bar a:hover { color: #82bfff; text-decoration: underline; }  
+.contact-bar a .arrow { font-size: 11px; opacity: 0.75; }  
+  
+/* ── Section labels ── */  
+.section-label {  
+position: relative;  
+z-index: 10;  
+display: flex;  
+align-items: center;  
+gap: 16px;  
+max-width: 1200px;  
+margin: 54px auto 22px;  
+padding: 0 30px;  
+}  
+  
+.section-label .sec-title {  
+font-family: ‘DM Mono’, monospace;  
+font-size: 11px;  
+letter-spacing: 3px;  
+text-transform: uppercase;  
+white-space: nowrap;  
+}  
+  
+.section-label::after {  
+content: ‘’;  
+flex: 1;  
+height: 1px;  
+}  
+  
+.section-label.normal-label .sec-title { color: var(–accent); }  
+.section-label.normal-label::after { background: linear-gradient(90deg, rgba(0,229,255,0.35), transparent); }  
+  
+.section-label.pro-label .sec-title { color: #a78bfa; }  
+.section-label.pro-label::after { background: linear-gradient(90deg, rgba(167,139,250,0.4), transparent); }  
+  
+.section-label.bundle-label .sec-title { color: var(–gold); }  
+.section-label.bundle-label::after { background: linear-gradient(90deg, rgba(240,192,64,0.35), transparent); }  
+  
+/* ── Grid ── */  
+.grid {  
+position: relative;  
+z-index: 10;  
+display: grid;  
+grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));  
+gap: 20px;  
+max-width: 1200px;  
+margin: 0 auto;  
+padding: 0 30px;  
+}  
+  
+.grid-2 { grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }  
+  
+/* ── Cards ── */  
+.card {  
+background: var(–card);  
+border: 1px solid var(–border);  
+border-radius: 20px;  
+padding: 30px;  
+position: relative;  
+overflow: hidden;  
+transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;  
+cursor: pointer;  
+animation: fadeUp 0.5s ease both;  
+}  
+  
+.card::before {  
+content: ‘’;  
+position: absolute;  
+inset: 0;  
+opacity: 0;  
+transition: opacity 0.3s ease;  
+pointer-events: none;  
+}  
+  
+.card:hover { transform: translateY(-4px); }  
+.card:hover::before { opacity: 1; }  
+  
+/* Normal */  
+.card.normal-card::before { background: linear-gradient(135deg, rgba(0,229,255,0.04) 0%, transparent 60%); }  
+.card.normal-card:hover { border-color: rgba(0,229,255,0.35); box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(0,229,255,0.07); }  
+  
+/* Pro */  
+.card.pro-card { border-color: rgba(167,139,250,0.2); }  
+.card.pro-card::before { background: linear-gradient(135deg, rgba(167,139,250,0.05) 0%, transparent 60%); }  
+.card.pro-card:hover { border-color: rgba(167,139,250,0.45); box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(167,139,250,0.1); }  
+  
+/* Bundle gold */  
+.card.bundle-all {  
+background: linear-gradient(135deg, #0f0f20 0%, #0a1525 100%);  
+border-color: var(–gold);  
+border-width: 1.5px;  
+}  
+.card.bundle-all::before { background: linear-gradient(135deg, rgba(240,192,64,0.06) 0%, transparent 60%); }  
+.card.bundle-all:hover { border-color: var(–gold); box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 50px rgba(240,192,64,0.1); }  
+  
+/* Bundle purple */  
+.card.bundle-airpods4 {  
+background: linear-gradient(135deg, #0f1520 0%, #0a0f1a 100%);  
+border-color: var(–accent2);  
+border-width: 1.5px;  
+}  
+.card.bundle-airpods4::before { background: linear-gradient(135deg, rgba(124,58,237,0.06) 0%, transparent 60%); }  
+.card.bundle-airpods4:hover { border-color: var(–accent2); box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 50px rgba(124,58,237,0.12); }  
+  
+/* Card inner */  
+.card-top {  
+display: flex;  
+align-items: flex-start;  
+justify-content: space-between;  
+margin-bottom: 22px;  
+}  
+  
+.icon-box {  
+width: 50px; height: 50px;  
+border-radius: 13px;  
+background: rgba(0,229,255,0.08);  
+border: 1px solid rgba(0,229,255,0.15);  
+display: flex; align-items: center; justify-content: center;  
+font-size: 20px;  
+}  
+  
+.pro-card .icon-box { background: rgba(167,139,250,0.08); border-color: rgba(167,139,250,0.2); }  
+.bundle-all .icon-box { background: rgba(240,192,64,0.1); border-color: rgba(240,192,64,0.25); }  
+.bundle-airpods4 .icon-box { background: rgba(124,58,237,0.12); border-color: rgba(124,58,237,0.3); }  
+  
+.tag {  
+font-family: ‘DM Mono’, monospace;  
+font-size: 10px;  
+letter-spacing: 2px;  
+text-transform: uppercase;  
+padding: 4px 12px;  
+border-radius: 50px;  
+border: 1px solid;  
+}  
+  
+.tag-default { color: var(–muted); border-color: var(–border); background: rgba(255,255,255,0.03); }  
+.tag-anc { color: var(–accent); border-color: rgba(0,229,255,0.3); background: rgba(0,229,255,0.07); }  
+.tag-pro { color: #a78bfa; border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.07); }  
+.tag-bundle { color: var(–gold); border-color: rgba(240,192,64,0.35); background: rgba(240,192,64,0.08); }  
+.tag-duo { color: #a78bfa; border-color: rgba(167,139,250,0.35); background: rgba(167,139,250,0.08); }  
+  
+.card-name {  
+font-size: 20px; font-weight: 700; letter-spacing: -0.5px;  
+margin-bottom: 7px; color: var(–white);  
+}  
+  
+.card-short-desc {  
+font-family: ‘DM Mono’, monospace;  
+font-size: 12px; color: var(–muted); line-height: 1.6; margin-bottom: 22px;  
+}  
+  
+.includes-list { list-style: none; margin-bottom: 22px; }  
+.includes-list li {  
+font-family: ‘DM Mono’, monospace;  
+font-size: 12px; color: var(–muted);  
+padding: 5px 0; display: flex; align-items: center; gap: 10px;  
+}  
+.includes-list li::before { content: ‘↳’; font-size: 13px; }  
+.normal-card .includes-list li::before, .bundle-airpods4 .includes-list li::before { color: #a78bfa; }  
+.bundle-all .includes-list li::before { color: var(–gold); }  
+  
+.price-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 18px; }  
+.price { font-size: 34px; font-weight: 800; letter-spacing: -1px; color: var(–white); }  
+.price-unit { font-family: ‘DM Mono’, monospace; font-size: 12px; color: var(–muted); }  
+.savings {  
+font-family: ‘DM Mono’, monospace; font-size: 11px;  
+color: #4ade80; background: rgba(74,222,128,0.08);  
+border: 1px solid rgba(74,222,128,0.2); padding: 3px 10px; border-radius: 50px;  
+}  
+  
+/* Buttons */  
+.btn {  
+width: 100%; padding: 13px 24px; border: none; border-radius: 12px;  
+font-family: ‘Syne’, sans-serif; font-weight: 700; font-size: 14px;  
+letter-spacing: 0.5px; cursor: pointer; transition: all 0.25s ease;  
+}  
+  
+.btn-default { background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.25); color: var(–accent); }  
+.btn-default:hover { background: rgba(0,229,255,0.18); border-color: rgba(0,229,255,0.5); box-shadow: 0 0 20px rgba(0,229,255,0.15); }  
+  
+.btn-pro { background: rgba(167,139,250,0.1); border: 1px solid rgba(167,139,250,0.28); color: #a78bfa; }  
+.btn-pro:hover { background: rgba(167,139,250,0.18); border-color: rgba(167,139,250,0.5); box-shadow: 0 0 20px rgba(167,139,250,0.15); }  
+  
+.btn-gold { background: linear-gradient(135deg, #d4a017 0%, #f0c040 50%, #d4a017 100%); color: #1a0f00; border: none; font-size: 15px; }  
+.btn-gold:hover { box-shadow: 0 0 30px rgba(240,192,64,0.35); }  
+  
+.btn-purple { background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 50%, #5b21b6 100%); color: #fff; border: none; }  
+.btn-purple:hover { box-shadow: 0 0 30px rgba(124,58,237,0.35); }  
+  
+/* ── Modal ── */  
+.modal-overlay {  
+position: fixed; inset: 0;  
+background: rgba(0,0,0,0.78); backdrop-filter: blur(10px);  
+z-index: 100; display: flex; align-items: center; justify-content: center;  
+padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;  
+}  
+  
+.modal-overlay.active { opacity: 1; pointer-events: all; }  
+  
+.modal {  
+background: #13131e; border: 1px solid var(–border); border-radius: 24px;  
+padding: 38px; max-width: 460px; width: 100%;  
+transform: translateY(20px) scale(0.97); transition: transform 0.3s ease;  
+}  
+  
+.modal-overlay.active .modal { transform: translateY(0) scale(1); }  
+  
+.modal-icon { font-size: 38px; text-align: center; margin-bottom: 12px; }  
+  
+.modal h2 {  
+font-size: 22px; font-weight: 800; text-align: center;  
+letter-spacing: -0.5px; margin-bottom: 4px;  
+}  
+  
+.modal-price {  
+text-align: center; font-size: 38px; font-weight: 800;  
+color: var(–accent); letter-spacing: -1px; margin: 12px 0 18px;  
+}  
+  
+.modal-price.gold { color: var(–gold); }  
+.modal-price.purple { color: #a78bfa; }  
+.modal-price.pro { color: #a78bfa; }  
+  
+.modal-desc-box {  
+background: rgba(255,255,255,0.03);  
+border: 1px solid rgba(255,255,255,0.07);  
+border-radius: 14px; padding: 18px 20px; margin-bottom: 22px;  
+}  
+  
+.desc-label {  
+font-family: ‘DM Mono’, monospace; font-size: 10px;  
+letter-spacing: 2.5px; text-transform: uppercase;  
+color: var(–muted); margin-bottom: 9px; display: block;  
+}  
+  
+.modal-desc-text {  
+font-family: ‘DM Mono’, monospace; font-size: 12.5px;  
+color: #9090b0; line-height: 1.8; margin-bottom: 12px;  
+}  
+  
+.modal-features { list-style: none; }  
+.modal-features li {  
+font-family: ‘DM Mono’, monospace; font-size: 12px; color: #7070a0;  
+padding: 3px 0; display: flex; align-items: flex-start; gap: 8px;  
+}  
+.modal-features li::before { content: ‘›’; font-size: 14px; line-height: 1.3; flex-shrink: 0; }  
+  
+.modal-feat-cyan .modal-features li::before { color: var(–accent); }  
+.modal-feat-pro .modal-features li::before { color: #a78bfa; }  
+.modal-feat-gold .modal-features li::before { color: var(–gold); }  
+.modal-feat-purple .modal-features li::before { color: #a78bfa; }  
+  
+.modal-actions { display: flex; gap: 12px; }  
+.modal-actions .btn { flex: 1; }  
+  
+.btn-close {  
+background: rgba(255,255,255,0.05); border: 1px solid var(–border);  
+color: var(–muted); font-family: ‘Syne’, sans-serif; font-weight: 600;  
+}  
+  
+.btn-confirm { background: var(–accent); color: #000; font-weight: 800; border: none; }  
+  
+.grid-1 {  
+grid-template-columns: 1fr;  
+}  
+  
+/* Pro bundle card */  
+.card.bundle-pro {  
+background: linear-gradient(135deg, #120f20 0%, #0e0a1c 100%);  
+border-color: rgba(167,139,250,0.35);  
+border-width: 1.5px;  
+}  
+  
+.card.bundle-pro::before {  
+background: linear-gradient(135deg, rgba(167,139,250,0.06) 0%, transparent 60%);  
+}  
+  
+.card.bundle-pro:hover {  
+border-color: rgba(167,139,250,0.6);  
+box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 50px rgba(167,139,250,0.12);  
+}  
+  
+.card.bundle-pro .includes-list li::before { color: #a78bfa; }  
+  
+/* Inline includes for wide all-in card */  
+.includes-list-inline {  
+display: grid;  
+grid-template-columns: repeat(2, 1fr);  
+margin-bottom: 14px;  
+}  
+  
+/* Best value banner */  
+.best-value-banner {  
+position: relative;  
+z-index: 10;  
+display: flex;  
+align-items: center;  
+justify-content: center;  
+gap: 14px;  
+max-width: 1200px;  
+margin: 0 auto 20px;  
+padding: 14px 30px;  
+background: linear-gradient(135deg, rgba(240,192,64,0.07) 0%, rgba(240,192,64,0.03) 100%);  
+border: 1px solid rgba(240,192,64,0.2);  
+border-radius: 14px;  
+}  
+  
+.best-value-banner .bv-text {  
+font-family: ‘DM Mono’, monospace;  
+font-size: 13px;  
+color: #c0a850;  
+letter-spacing: 0.3px;  
+}  
+  
+.best-value-banner .bv-text strong {  
+color: var(–gold);  
+font-weight: 600;  
+}  
+  
+.best-value-banner .bv-icon { font-size: 14px; opacity: 0.7; }  
+  
+/* Featured all-in bundle */  
+.best-value-tag {  
+position: absolute;  
+top: -1px; right: 24px;  
+background: linear-gradient(135deg, #d4a017, #f0c040);  
+color: #1a0f00;  
+font-family: ‘DM Mono’, monospace;  
+font-size: 10px;  
+font-weight: 700;  
+letter-spacing: 2px;  
+padding: 5px 14px;  
+border-radius: 0 0 10px 10px;  
+}  
+  
+.bundle-all-featured {  
+border-width: 2px !important;  
+box-shadow: 0 0 40px rgba(240,192,64,0.08);  
+}  
+  
+.retail-total {  
+font-family: ‘DM Mono’, monospace;  
+font-size: 11px;  
+color: var(–muted);  
+margin-bottom: 10px;  
+}  
+  
+/* Footer */  
+footer {  
+position: relative; z-index: 10; text-align: center;  
+padding: 60px 20px 40px;  
+font-family: ‘DM Mono’, monospace; font-size: 12px; color: var(–muted);  
+}  
+footer a { color: #5ba3f5; text-decoration: none; }  
+footer a:hover { text-decoration: underline; }  
+  
+/* Animation */  
+@keyframes fadeUp {  
+from { opacity: 0; transform: translateY(24px); }  
+to { opacity: 1; transform: translateY(0); }  
+}  
+.card:nth-child(1) { animation-delay: 0.05s; }  
+.card:nth-child(2) { animation-delay: 0.12s; }  
+  
+@media (max-width: 600px) {  
+.grid, .grid-2 { padding: 0 16px; grid-template-columns: 1fr; }  
+.section-label { padding: 0 16px; }  
+.contact-bar { font-size: 12px; padding: 9px 14px; flex-wrap: wrap; justify-content: center; }  
+}  
+</style>  
+  
+</head>  
+<body>  
+  
+<div class="glow-orb-right"></div>  
+  
+<header>  
+  <div class="badge">🎧 Vendor Access Portal</div>  
+  <h1>AirPods<br>Vendor Hub</h1>  
+  <p class="subtitle">// select your vendor license below</p>  
+  
+  <div class="contact-bar">  
+    <span class="tiktok-icon">🎵</span>  
+    <span>To purchase, DM</span>  
+    <a href="https://www.tiktok.com/@imonshi" target="_blank" rel="noopener">  
+      @imonshi <span class="arrow">↗</span>  
+    </a>  
+    <span>on TikTok</span>  
+  </div>  
+</header>  
+  
+<!-- ══ Bundles ══ -->  
+  
+<div class="section-label bundle-label">  
+  <span class="sec-title">Bundle Deals — Save More</span>  
+</div>  
+  
+<!-- Best Value highlight banner -->  
+  
+<div class="best-value-banner">  
+  <span class="bv-icon">👑</span>  
+  <span class="bv-text">Get everything for <strong>$50</strong> — the smartest way to start reselling</span>  
+  <span class="bv-icon">👑</span>  
+</div>  
+  
+<!-- All-in bundle full width -->  
+  
+<div class="grid grid-1" style="margin-bottom:20px;">  
+  <div class="card bundle-all bundle-all-featured" onclick="openModal('bundleall')">  
+    <div class="best-value-tag">⭐ BEST VALUE</div>  
+    <div class="card-top" style="margin-top:10px;">  
+      <div class="icon-box">👑</div>  
+      <span class="tag tag-bundle">All-In Bundle</span>  
+    </div>  
+    <div class="card-name">All Vendors Bundle</div>  
+    <p class="card-short-desc" style="color:#b0a080;margin-bottom:14px;">Every single vendor in one go. The most complete reseller package available — all 4 licenses, instant access. Covers the entire AirPods lineup.</p>  
+    <ul class="includes-list includes-list-inline">  
+      <li>AirPods 4 — <span style="color:#e8e8f0;">$15</span></li>  
+      <li>AirPods 4 (ANC) — <span style="color:#e8e8f0;">$15</span></li>  
+      <li>AirPods Pro 2 — <span style="color:#e8e8f0;">$15</span></li>  
+      <li>AirPods Pro 3 — <span style="color:#e8e8f0;">$20</span></li>  
+    </ul>  
+    <div class="retail-total">Individual total: <span style="text-decoration:line-through;color:#666;">$65</span></div>  
+    <div class="price-row">  
+      <div class="price">$50</div>  
+      <div class="price-unit">/ bundle</div>  
+      <div class="savings">Save $15</div>  
+    </div>  
+    <button class="btn btn-gold" style="font-size:16px;padding:16px;">👑 Get All Vendors — Best Deal</button>  
+  </div>  
+</div>  
+  
+<!-- AirPods 4 + Pro bundles side by side -->  
+  
+<div class="grid grid-2">  
+  <div class="card bundle-airpods4" onclick="openModal('bundle4')">  
+    <div class="card-top">  
+      <div class="icon-box">🎶</div>  
+      <span class="tag tag-duo">AirPods 4 Bundle</span>  
+    </div>  
+    <div class="card-name">AirPods 4 Bundle</div>  
+    <p class="card-short-desc" style="color:#9090c0;margin-bottom:14px;">Both AirPods 4 models in one clean package. A solid entry point for resellers covering the full AirPods 4 lineup.</p>  
+    <ul class="includes-list">  
+      <li>AirPods 4 (Standard) — <span style="color:#c0c0e0;">$15</span></li>  
+      <li>AirPods 4 (ANC) — <span style="color:#c0c0e0;">$15</span></li>  
+    </ul>  
+    <div class="retail-total">Individual total: <span style="text-decoration:line-through;color:#555;">$30</span></div>  
+    <div class="price-row">  
+      <div class="price">$25</div>  
+      <div class="price-unit">/ bundle</div>  
+      <div class="savings">Save $5</div>  
+    </div>  
+    <button class="btn btn-purple">Get Bundle</button>  
+  </div>  
+  
+  <div class="card bundle-pro" onclick="openModal('bundlepro')">  
+    <div class="card-top">  
+      <div class="icon-box" style="background:rgba(167,139,250,0.1);border-color:rgba(167,139,250,0.25);">🎯</div>  
+      <span class="tag tag-pro">Pro Bundle</span>  
+    </div>  
+    <div class="card-name">AirPods Pro Bundle</div>  
+    <p class="card-short-desc" style="color:#a090c8;margin-bottom:14px;">Both Pro models together. For resellers targeting the premium AirPods market — Pro 2 and Pro 3 sourcing in one package.</p>  
+    <ul class="includes-list">  
+      <li>AirPods Pro 2 — <span style="color:#c8b8f8;">$15</span></li>  
+      <li>AirPods Pro 3 — <span style="color:#c8b8f8;">$20</span></li>  
+    </ul>  
+    <div class="retail-total">Individual total: <span style="text-decoration:line-through;color:#555;">$35</span></div>  
+    <div class="price-row">  
+      <div class="price">$25</div>  
+      <div class="price-unit">/ bundle</div>  
+      <div class="savings">Save $10</div>  
+    </div>  
+    <button class="btn btn-pro">Get Pro Bundle</button>  
+  </div>  
+</div>  
+  
+<!-- ══ AirPods 4 Individual ══ -->  
+  
+<div class="section-label normal-label" style="margin-top:60px;">  
+  <span class="sec-title">AirPods 4 — $15 each</span>  
+</div>  
+  
+<div class="grid">  
+  <div class="card normal-card" onclick="openModal('airpods4')">  
+    <div class="card-top">  
+      <div class="icon-box">🎵</div>  
+      <span class="tag tag-default">Standard</span>  
+    </div>  
+    <div class="card-name">AirPods 4</div>  
+    <p class="card-short-desc">Standard model vendor access.<br>Full supplier chain included.</p>  
+    <div class="price-row">  
+      <div class="price">$15</div>  
+      <div class="price-unit">/ vendor</div>  
+    </div>  
+    <button class="btn btn-default">Purchase Vendor</button>  
+  </div>  
+  
+  <div class="card normal-card" onclick="openModal('airpods4anc')">  
+    <div class="card-top">  
+      <div class="icon-box">🔇</div>  
+      <span class="tag tag-anc">ANC</span>  
+    </div>  
+    <div class="card-name">AirPods 4 (ANC)</div>  
+    <p class="card-short-desc">Active Noise Cancellation model.<br>Premium tier supplier access.</p>  
+    <div class="price-row">  
+      <div class="price">$15</div>  
+      <div class="price-unit">/ vendor</div>  
+    </div>  
+    <button class="btn btn-default">Purchase Vendor</button>  
+  </div>  
+</div>  
+  
+<!-- ══ AirPods Pro Individual ══ -->  
+  
+<div class="section-label pro-label" style="margin-top:50px;">  
+  <span class="sec-title">AirPods Pro — From $15</span>  
+</div>  
+  
+<div class="grid">  
+  <div class="card pro-card" onclick="openModal('pro2')">  
+    <div class="card-top">  
+      <div class="icon-box">✨</div>  
+      <span class="tag tag-pro">Pro 2</span>  
+    </div>  
+    <div class="card-name">AirPods Pro 2</div>  
+    <p class="card-short-desc">2nd generation Pro vendor access.<br>H2 chip sourcing included.</p>  
+    <div class="price-row">  
+      <div class="price">$15</div>  
+      <div class="price-unit">/ vendor</div>  
+    </div>  
+    <button class="btn btn-pro">Purchase Vendor</button>  
+  </div>  
+  
+  <div class="card pro-card" onclick="openModal('pro3')">  
+    <div class="card-top">  
+      <div class="icon-box">💎</div>  
+      <span class="tag tag-pro">Pro 3</span>  
+    </div>  
+    <div class="card-name">AirPods Pro 3</div>  
+    <p class="card-short-desc">3rd generation Pro vendor access.<br>Latest generation sourcing.</p>  
+    <div class="price-row">  
+      <div class="price">$20</div>  
+      <div class="price-unit">/ vendor</div>  
+    </div>  
+    <button class="btn btn-pro">Purchase Vendor</button>  
+  </div>  
+</div>  
+  
+<footer>  
+  AirPods Vendor Hub &nbsp;·&nbsp; All prices USD &nbsp;·&nbsp;  
+  DM <a href="https://www.tiktok.com/@imonshi" target="_blank" rel="noopener">@imonshi ↗</a> on TikTok to purchase  
+</footer>  
+  
+<!-- ══ Modal ══ -->  
+  
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">  
+  <div class="modal" id="modal-box">  
+    <div class="modal-icon" id="m-icon">🎵</div>  
+    <h2 id="m-title"></h2>  
+    <div class="modal-price" id="m-price"></div>  
+    <div class="modal-desc-box" id="m-desc-box">  
+      <span class="desc-label">About this vendor</span>  
+      <p class="modal-desc-text" id="m-desc"></p>  
+      <ul class="modal-features" id="m-features"></ul>  
+    </div>  
+    <div class="modal-actions">  
+      <button class="btn btn-close" onclick="closeModal()">Cancel</button>  
+      <a href="https://www.tiktok.com/@imonshi" target="_blank" rel="noopener" id="m-confirm-link" style="flex:1;text-decoration:none;">  
+        <button class="btn btn-confirm" id="m-confirm" style="width:100%;">DM @imonshi ↗</button>  
+      </a>  
+    </div>  
+  </div>  
+</div>  
+  
+<script>  
+const ITEMS = {  
+  airpods4: {  
+    icon: '🎵', title: 'AirPods 4', price: '$15', colorClass: 'cyan',  
+    desc: 'Get full vendor access for the standard AirPods 4. Includes verified supplier contacts, wholesale unit pricing, and all documentation needed to source and resell at scale.',  
+    features: [  
+      'Verified supplier contacts & sourcing info',  
+      'Retail & wholesale unit pricing breakdown',  
+      'Full resale documentation package',  
+      'Compatible with all major storefronts',  
+    ],  
+    confirmBg: '#00e5ff', confirmColor: '#000'  
+  },  
+  airpods4anc: {  
+    icon: '🔇', title: 'AirPods 4 (ANC)', price: '$15', colorClass: 'cyan',  
+    desc: 'Vendor access dedicated to the AirPods 4 Active Noise Cancellation model. The ANC variant commands higher margins — this package includes ANC-specific supplier contacts and stock availability data.',  
+    features: [  
+      'ANC-specific supplier chain details',  
+      'Higher-margin pricing data included',  
+      'Separate from standard AP4 — dedicated contacts',  
+      'Stock availability tracking info included',  
+    ],  
+    confirmBg: '#00e5ff', confirmColor: '#000'  
+  },  
+  pro2: {  
+    icon: '✨', title: 'AirPods Pro 2', price: '$15', colorClass: 'pro',  
+    desc: 'Vendor access for the AirPods Pro 2nd generation, powered by Apple\'s H2 chip with industry-leading ANC and Adaptive Transparency. Get direct supplier lines for the Pro 2 with this pack.',  
+    features: [  
+      'H2 chip — premium supplier sourcing',  
+      'Adaptive Transparency model documentation',  
+      'Pro-grade reseller pricing tiers',  
+      'High-demand unit — priority sourcing contacts',  
+    ],  
+    confirmBg: '#a78bfa', confirmColor: '#0a0a0f'  
+  },  
+  pro3: {  
+    icon: '💎', title: 'AirPods Pro 3', price: '$20', colorClass: 'pro',  
+    desc: 'Vendor access for the newest AirPods Pro 3rd generation — the most advanced AirPods available. Early-access supplier contacts and full third-gen documentation are included.',  
+    features: [  
+      'Latest generation — cutting-edge specs',  
+      'Early access supplier contacts included',  
+      'Highest-demand Pro model currently',  
+      'Full third-gen resale documentation',  
+    ],  
+    confirmBg: '#a78bfa', confirmColor: '#0a0a0f'  
+  },  
+  bundlepro: {  
+    icon: '🎯', title: 'AirPods Pro Bundle', price: '$25', colorClass: 'pro',  
+    desc: 'Both AirPods Pro models in one premium package. Pro 2 and Pro 3 vendor access combined — perfect for resellers targeting the high-end AirPods market.',  
+    features: [  
+      'AirPods Pro 2 vendor access ($15 value)',  
+      'AirPods Pro 3 vendor access ($20 value)',  
+      'Save $10 vs. buying each separately',  
+      'Premium supplier contacts for both models',  
+    ],  
+    confirmBg: '#a78bfa', confirmColor: '#0a0a0f'  
+  },  
+  bundle4: {  
+    icon: '🎶', title: 'AirPods 4 Bundle', price: '$25', colorClass: 'purple',  
+    desc: 'Both AirPods 4 models in one package — Standard and ANC. Perfect if you want to offer both versions to your buyers without buying each separately.',  
+    features: [  
+      'AirPods 4 Standard vendor access',  
+      'AirPods 4 ANC vendor access',  
+      'Combined sourcing documentation',  
+      'Ideal for multi-model resellers',  
+    ],  
+    confirmBg: '#7c3aed', confirmColor: '#fff'  
+  },  
+  bundleall: {  
+    icon: '👑', title: 'All Vendors Bundle', price: '$50', colorClass: 'gold',  
+    desc: 'The complete package — all four AirPods vendor licenses in one. AirPods 4, AirPods 4 ANC, Pro 2, and Pro 3. Individual prices total $65 — you save $15 by grabbing the bundle.',  
+    features: [  
+      'All 4 vendor licenses in one purchase',  
+      'AirPods 4 ($15) + ANC ($15) + Pro 2 ($15) + Pro 3 ($20)',  
+      'Save $15 vs. buying each separately',  
+      'Best value for full-catalog resellers',  
+    ],  
+    confirmBg: '#f0c040', confirmColor: '#1a0f00'  
+  },  
+};  
+  
+let currentTitle = '';  
+  
+function openModal(key) {  
+  const d = ITEMS[key];  
+  currentTitle = d.title;  
+  
+  document.getElementById('m-icon').textContent = d.icon;  
+  document.getElementById('m-title').textContent = d.title;  
+  document.getElementById('m-desc').textContent = d.desc;  
+  
+  const priceEl = document.getElementById('m-price');  
+  priceEl.textContent = d.price;  
+  priceEl.className = 'modal-price ' + (d.colorClass === 'cyan' ? '' : d.colorClass);  
+  
+  const featEl = document.getElementById('m-features');  
+  featEl.innerHTML = '';  
+  d.features.forEach(f => {  
+    const li = document.createElement('li');  
+    li.textContent = f;  
+    featEl.appendChild(li);  
+  });  
+  
+  const box = document.getElementById('m-desc-box');  
+  box.className = 'modal-desc-box modal-feat-' + d.colorClass;  
+  
+  const btn = document.getElementById('m-confirm');  
+  btn.style.background = d.confirmBg;  
+  btn.style.color = d.confirmColor;  
+  
+  document.getElementById('modal-overlay').classList.add('active');  
+}  
+  
+function closeModal() {  
+  document.getElementById('modal-overlay').classList.remove('active');  
+}  
+  
+function closeModalOutside(e) {  
+  if (e.target === document.getElementById('modal-overlay')) closeModal();  
+}  
+  
+function confirmPurchase() {}  
+</script>  
+  
+</body>  
+</html>  
